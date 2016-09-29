@@ -1,63 +1,22 @@
-/*
-    Insert Node in a doubly sorted linked list 
-    After each insertion, the list should be sorted
-   Node is defined as
-   struct Node
-   {
-     int data;
-     Node *next;
-     Node *prev;
-   }
-*/
-Node* SortedInsert(Node *head,int data)
+void sortedInsert(struct node** head_ref, struct node* new_node)
 {
-    struct Node *temp;
-  struct Node *newNode = new Node();
-  newNode->data=data;
-  newNode->next=NULL;
-  newNode->prev=NULL;
-  temp=head;
-
-if(head==NULL)
- {
-    head = newNode;      
- }
-
-else
- {
-    while(temp!=NULL)
+    struct node* current;
+    /* Special case for the head end */
+    if (*head_ref == NULL || (*head_ref)->data >= new_node->data)
     {
-        if(temp->data<data&&temp->next!=NULL)
+        new_node->next = *head_ref;
+        *head_ref = new_node;
+    }
+    else
+    {
+        /* Locate the node before the point of insertion */
+        current = *head_ref;
+        while (current->next!=NULL &&
+               current->next->data < new_node->data)
         {
-            temp=temp->next;
+            current = current->next;
         }
-        else
-            {
-            if(temp->next==NULL&&temp->data<data)
-                {
-                temp->next = newNode;
-                newNode->prev = temp;
-                break;
-            }
-
-           else if(temp->prev==NULL&&temp->data>data)
-                {
-                newNode->next=temp;
-                temp->prev = newNode;
-                head=newNode;
-                break;
-            }
-
-           else
-                {
-                newNode->next = temp;
-                newNode->prev = temp->prev;
-                temp->prev->next =newNode;
-                temp->prev=newNode;
-                break;
-                }    
-             }
-         }
-   }
-  return head;
+        new_node->next = current->next;
+        current->next = new_node;
+    }
 }
